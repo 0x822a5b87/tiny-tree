@@ -2,9 +2,15 @@
 
 Record a simple snippet of code appearing in mind.
 
+## compile
+
+```bash
+go work use b-plus-tree
+```
+
 ## b-plus-tree
 
-B+ tree, unlike a B-tree, has two orders, ‘a’ and ‘b’, one for the internal nodes and the other for the external (or leaf) nodes. 
+B+ tree, unlike a B-tree, has two orders, ‘a’ and ‘b’, one for the internal nodes and the other for the external (or leaf) nodes.
 
 B+ Trees contain two types of nodes:
 
@@ -39,7 +45,7 @@ classDef header fill: #696,color: #fff,font-weight: bold,padding: 10px;
 ```
 
 - `P` stands for a pointer points to another non-leaf node or leaf node;
-- `K` stands for the key-value parit of data, which is ordered;
+- `K` stands for the key-value pair of data, which is ordered;
 - `a` stands for the order of a B+Tree;
 - `c` stands for the maximum size of internal node, in other words, it compel `c <= a`;
 - Each internal node has at most a tree pointer;
@@ -86,7 +92,7 @@ classDef op fill:#bbf,stroke:#f66,stroke-width:2px,color:#fff,stroke-dasharray: 
 classDef header fill: #696,color: #fff,font-weight: bold,padding: 10px;
 ```
 
-- `c` <= `b` and each `D[i]` is a data pointer points to a acutal record in the disk whose key-value pair is K[i] or to a disk file block containing that record;
+- `c` <= `b` and each `D[i]` is a data pointer points to a actual record in the disk whose key-value pair is K[i] or to a disk file block containing that record;
 - k1 < k2 < ...
 - Each leaf node has at least `ceil(b / 2)`
 - All leaf nodes are the same level.
@@ -102,7 +108,7 @@ block:rootNode:6
     ptr1
     node4["3"]
     ptr2
-    node8["7"] 
+    node8["7"]
     ptr3
     node12["11"]
 end
@@ -153,7 +159,7 @@ block:rootNode:6
     ptr1
     node4["3"]
     ptr2
-    node8["7"] 
+    node8["7"]
     ptr3
     node12["12"]
 end
@@ -199,7 +205,7 @@ classDef header fill: #696,color: #fff,font-weight: bold,padding: 10px;
  ```mermaid
  block-beta
  columns 10
- 
+
  space:2
  block:rootNode:6
      ptr1
@@ -207,46 +213,46 @@ classDef header fill: #696,color: #fff,font-weight: bold,padding: 10px;
      ptr2
      node14["3"]
      ptr3
-     node8["7"] 
+     node8["7"]
      ptr4
      node12["12"]
  end
  space:2
- 
+
  space:10
- 
+
  block:leftNode:2
      node1["1"]
      node2["2"]
  end
- 
+
  block:leftNode2:2
      node3["3"]
      node13["3"]
  end
- 
+
  block:middleNode:3
      node5["5"]
      node6["6"]
      node7["7"]
  end
- 
+
  block:rightNode:3
      node9["9"]
      node10["10"]
      node11["11"]
  end
- 
+
  ptr1 --> leftNode
  ptr2 --> leftNode2
  ptr3 --> middleNode
  ptr4 --> rightNode
- 
+
  class ptr1 header
  class ptr2 header
  class ptr3 header
  class ptr4 header
- 
+
  classDef front 1,fill:#FFCCCC,stroke:#333;
  classDef back fill:#969,stroke:#333;
  classDef op fill:#bbf,stroke:#f66,stroke-width:2px,color:#fff,stroke-dasharray: 5 5
@@ -277,7 +283,7 @@ end
 
 block:rootNode2:5
     ptr5
-    node8["7"] 
+    node8["7"]
     ptr6
     node12["11"]
 end
