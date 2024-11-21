@@ -1,7 +1,6 @@
 package b_plus_tree
 
 import (
-	"fmt"
 	"math/rand"
 	"strconv"
 	"testing"
@@ -98,13 +97,6 @@ func assertLeafLinkedList(t *testing.T, root *BTree, count int, inputs []input) 
 		}
 		for _, v := range start.indices {
 			if v != i {
-				{
-					// TODO delete comment
-					for _, j := range inputs {
-						fmt.Printf("%d,", j.key)
-					}
-					println()
-				}
 				t.Errorf("expected %d, actual %d", i, v)
 				return
 			}
