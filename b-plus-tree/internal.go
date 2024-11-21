@@ -1,5 +1,7 @@
 package b_plus_tree
 
+import "fmt"
+
 const minOrder = 3
 
 // indexNode index of data
@@ -52,6 +54,7 @@ func (node *indexNode) split(order int) {
 		right.parent = node.parent
 		right.indices = copyToEnd(node.indices, separatorIndex)
 		right.vals = node.vals[separatorIndex:]
+		right.next = node.next
 
 		left := newIndexNode(true)
 		left.parent = node.parent
@@ -99,11 +102,8 @@ func (node *indexNode) splitBranch(order int, left *indexNode, newIndex int, rig
 
 		// set node to left
 		parent.childs[index] = left
-		// TODO leaf nodes could become invalid under certain special conditions.
 		// update next pointer of previous child
-		if index > 0 {
-			parent.childs[index-1].next = left
-		}
+		parent.setNext(index, left)
 		parent.indices = insertNth(parent.indices, newIndex, index)
 		parent.childs = insertNth(parent.childs, right, index+1)
 
@@ -173,4 +173,65 @@ func (node *indexNode) shouldSplitLeaf(order int) bool {
 
 func (node *indexNode) shouldSplitBranch(order int) bool {
 	return len(node.childs) == order
+}
+
+func (node *indexNode) setNext(index int, next *indexNode) {
+	if index > 0 {
+		// find previous sibling
+		prevSibling := node.childs[index-1]
+		for !prevSibling.isLeaf {
+			prevSibling = prevSibling.childs[len(prevSibling.childs)-1]
+		}
+
+		// find next
+		nextSibling := next
+		for !nextSibling.isLeaf {
+			nextSibling = nextSibling.childs[0]
+		}
+		prevSibling.next = nextSibling
+
+		return
+	}
+
+	parent := node.parent
+	if parent == nil {
+		// I am the first node.
+		return
+	}
+
+	for siblingIndex, sibling := range parent.childs {
+		if sibling == node {
+			// find the position of my parent
+			parent.setNext(siblingIndex, next)
+		}
+	}
+}
+
+func (node *indexNode) print() {
+	node.doPrint(0)
+}
+
+func (node *indexNode) doPrint(depth int) {
+	if node.isLeaf {
+		for j := 0; j < depth; j++ {
+			fmt.Printf("    ")
+		}
+		fmt.Printf("[")
+		for _, index := range node.indices {
+			fmt.Printf("`%d`,", index)
+		}
+		fmt.Printf("]\n")
+	} else {
+		for i, child := range node.childs {
+			for j := 0; j < depth; j++ {
+				fmt.Printf("    ")
+			}
+			child.doPrint(depth + 1)
+
+			if i == len(node.indices) {
+				continue
+			}
+			fmt.Printf("%d\n", node.indices[i])
+		}
+	}
 }

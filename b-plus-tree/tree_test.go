@@ -1,6 +1,7 @@
 package b_plus_tree
 
 import (
+	"fmt"
 	"math/rand"
 	"strconv"
 	"testing"
@@ -21,10 +22,10 @@ func TestNewBTree(t *testing.T) {
 }
 
 func Test_RandomTest(t *testing.T) {
-	for i := 0; i < 100; i++ {
-		minV, maxV := 3, 5
+	for i := 0; i < 10000; i++ {
+		minV, maxV := 3, 10
 		order := rand.Intn(maxV-minV+1) + minV
-		minV, maxV = 500, 1000
+		minV, maxV = 10, 500
 		count := rand.Intn(maxV-minV+1) + minV
 		testBTreeSearchShuffle(t, order, count)
 	}
@@ -34,7 +35,7 @@ func Test_UnShuffleRandomTest(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		minV, maxV := 3, 5
 		order := rand.Intn(maxV-minV+1) + minV
-		minV, maxV = 500, 1000
+		minV, maxV = 100, 1000
 		count := rand.Intn(maxV-minV+1) + minV
 		testBTreeSearchUnShuffle(t, order, count)
 	}
@@ -58,21 +59,7 @@ func testBTreeSearchUnShuffle(t *testing.T, order, count int) {
 		compareData(t, root.Search(v.key), data)
 	}
 
-	start := root.root.find(0)
-	for i := 0; i < count; {
-		if start == nil {
-			t.Errorf("the linked list is error, failed to search value = %v", i)
-			return
-		}
-		for _, v := range start.indices {
-			if v != i {
-				t.Errorf("expected %d, actual %d", i, v)
-				return
-			}
-			i++
-		}
-		start = start.next
-	}
+	assertLeafLinkedList(t, root, count, inputs)
 }
 
 func testBTreeSearchShuffle(t *testing.T, order, count int) {
@@ -97,6 +84,33 @@ func testBTreeSearchShuffle(t *testing.T, order, count int) {
 			Val: []string{v.val},
 		}
 		compareData(t, root.Search(v.key), data)
+	}
+
+	assertLeafLinkedList(t, root, count, inputs)
+}
+
+func assertLeafLinkedList(t *testing.T, root *BTree, count int, inputs []input) {
+	start := root.root.find(0)
+	for i := 0; i < count; {
+		if start == nil {
+			t.Errorf("the linked list is error, failed to search value = %v", i)
+			return
+		}
+		for _, v := range start.indices {
+			if v != i {
+				{
+					// TODO delete comment
+					for _, j := range inputs {
+						fmt.Printf("%d,", j.key)
+					}
+					println()
+				}
+				t.Errorf("expected %d, actual %d", i, v)
+				return
+			}
+			i++
+		}
+		start = start.next
 	}
 }
 
