@@ -1,6 +1,7 @@
 # B+ Tree
 
-> [Here is another explanation of B+Tree in java version](./java-code-with-explanation.md)
+> 1. [Here is an explanation of B+Tree in java version](./version-01.md)
+> 2. [Here is another explanation of B+Tree in java version](./version-02.md)
 
 ## Performance Optimization Plan
 
@@ -11,6 +12,8 @@
 ## reference
 
 - [B+ Tree (programiz)](https://www.programiz.com/dsa/b-plus-tree)
+- [insertion-into-a-b-tree](https://www.programiz.com/dsa/insertion-into-a-b-tree)
+- [deletion-from-a-b-plus-tree](https://www.programiz.com/dsa/deletion-from-a-b-plus-tree)
 
 - [Introduction of B+ Tree](https://www.geeksforgeeks.org/introduction-of-b-tree/)
 - [Insertion in a B+ tree](https://www.geeksforgeeks.org/insertion-in-a-b-tree/)
@@ -22,8 +25,8 @@ B+ tree, unlike a B-tree, has two orders, ‘a’ and ‘b’, one for the inter
 
 B+ Trees contain two types of nodes:
 
-- ***\*Internal Nodes:\**** Internal Nodes are the nodes that are present in at least n/2 record pointers, but not in the root node,
-- ***\*Leaf Nodes:\**** Leaf Nodes are the nodes that have n pointers.
+- **Internal Nodes:** Internal Nodes are the nodes that are present in at least n/2 record pointers, but not in the root node,
+- **Leaf Nodes:** Leaf Nodes are the nodes that have n pointers.
 
 ### The Structure of the Internal Nodes of a B+ Tree of Order `a` is as Follows
 
@@ -340,6 +343,37 @@ classDef header fill: #696,color: #fff,font-weight: bold,padding: 10px;
 
 ## Deletion
 
+Before going through the steps below, one must know these facts about a B+ tree of degree **m**(m = order - 1).
+
+1. A node can have a maximum of `m` children. (i.e. 3);
+2. A node can contain a maximum of `m - 1` keys. (i.e. 2);
+3. A node should have a minimum of `⌈m/2⌉` children. (i.e. 2);
+4. A node (except root node) should contain a minimum of `⌈m/2⌉ - 1` keys. (i.e. 1)
+
+### Pseudocode
+
+```rust
+let node_to_be_deleted = find_node();
+let node_after_deletion = delete_node(node_to_be_deleted);
+
+if check_minimum_number_of_node(node_after_deletion) {
+    if immediate_sibling_contains_enough_numbers {
+        borrow_from_immediate_sibling(parent);
+    } else {
+        shrink_childs_of_current_node();
+    }
+}
+
+if parent.has_childs() {
+    // reconstruct key and childs
+    parent.reconstruct_internal_structure();
+    // it's is important to update the keys when delete a key appears in the internal node.
+    parent.update_keys_if_key_appears_in_internal_node();
+} else {
+    parent.shrink_parent();
+}
+```
+
 ### The key to be deleted was not found
 
 > Return and do nothing.
@@ -393,7 +427,6 @@ class index2 front
 ptr1 --> left
 ptr2 --> mid
 ptr3--> right
-
 
 classDef front 1,fill:#FFCCCC,stroke:#333;
 classDef back fill:#969,stroke:#333;
